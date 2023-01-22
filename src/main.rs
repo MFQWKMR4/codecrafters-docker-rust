@@ -40,11 +40,7 @@ fn isolate(root: &str, command: &str) -> String {
     fs::File::create(format!("{}/dev/null", root)).expect("creation of null file failed");
 
     // copy command
-    mkdir_p(PathBuf::from(format!(
-        "{}/{}",
-        root,
-        command_path.display()
-    )));
+    mkdir_p(PathBuf::from(format!("{}{}", root, command_path.display())));
     let new_command = format!("{}/{}/{}", root, command_path.display(), file_name);
     fs::copy(command, &new_command).expect("could not copy command");
 
@@ -56,7 +52,7 @@ fn isolate(root: &str, command: &str) -> String {
 fn mkdir_p(path: PathBuf) {
     let display = path.display();
     if !Path::new(&format!("{}", display)).exists() {
-        fs::create_dir(&format!("{}", display))
+        fs::create_dir_all(&format!("{}", display))
             .expect(&format!("not possible to create dir, {}", display));
     }
 }
