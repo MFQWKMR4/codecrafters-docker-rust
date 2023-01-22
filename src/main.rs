@@ -28,7 +28,7 @@ fn main() -> Result<()> {
 
 fn isolate(root: &str, command: &str) -> String {
     let mut command_path = PathBuf::from(command);
-    let file_name = path.file_name().unwrap().to_str().unwrap();
+    let file_name = command_path.file_name().unwrap().to_str().unwrap();
     command_path.pop();
 
     // mkdir virtual root
