@@ -38,8 +38,12 @@ fn isolate(root: &str, command: &str) -> String {
     fs::File::create(format!("{}/dev/null", root)).expect("creation of null file failed");
 
     // copy command
-    mkdir_p(PathBuf::from(format!("{}/{}", root, command_path)));
-    let new_command = format!("{}/{}/{}", root, command_path, file_name);
+    mkdir_p(PathBuf::from(format!(
+        "{}/{}",
+        root,
+        command_path.display()
+    )));
+    let new_command = format!("{}/{}/{}", root, command_path.display(), file_name);
     fs::copy(command, new_command).expect("could not copy command");
 
     // chroot virtual root
