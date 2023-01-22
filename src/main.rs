@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 use std::fs;
+use std::os::unix::fs::chroot;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
@@ -27,7 +28,7 @@ fn main() -> Result<()> {
 
 fn isolate(root: &str, command: &str) -> String {
     let mut command_path = PathBuf::from(command);
-    let filename = path.file_name().unwrap().to_str().unwrap();
+    let file_name = path.file_name().unwrap().to_str().unwrap();
     command_path.pop();
 
     // mkdir virtual root
@@ -54,6 +55,7 @@ fn isolate(root: &str, command: &str) -> String {
 fn mkdir_p(path: PathBuf) {
     let display = path.display();
     if !Path::new(&format!("{}", display)).exists() {
-        fs::create_dir(display).expect(&format!("not possible to create dir, {}", display));
+        fs::create_dir(&format!("{}", display))
+            .expect(&format!("not possible to create dir, {}", display));
     }
 }
