@@ -28,7 +28,8 @@ fn main() -> Result<()> {
 
 fn isolate(root: &str, command: &str) -> String {
     let mut command_path = PathBuf::from(command);
-    let file_name = command_path.file_name().unwrap().to_str().unwrap();
+    let binding = command_path.clone();
+    let file_name = binding.file_name().unwrap().to_str().unwrap();
     command_path.pop();
 
     // mkdir virtual root
@@ -45,7 +46,7 @@ fn isolate(root: &str, command: &str) -> String {
         command_path.display()
     )));
     let new_command = format!("{}/{}/{}", root, command_path.display(), file_name);
-    fs::copy(command, new_command).expect("could not copy command");
+    fs::copy(command, &new_command).expect("could not copy command");
 
     // chroot virtual root
     chroot(root).expect("not possible to use chroot");
