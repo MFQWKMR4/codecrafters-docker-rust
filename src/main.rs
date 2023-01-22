@@ -18,9 +18,5 @@ fn main() -> Result<()> {
             )
         })?;
 
-    if output.status.success() {
-        std::process::exit(0);
-    } else {
-        std::process::exit(1);
-    }
+    std::process::exit(output.status.code().unwrap())
 }
