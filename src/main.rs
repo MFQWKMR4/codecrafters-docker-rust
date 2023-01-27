@@ -1,4 +1,6 @@
 use anyhow::{Context, Result};
+#[cfg(target_os = "linux")]
+use libc;
 use std::fs;
 use std::os::unix::fs::chroot;
 use std::path::{Path, PathBuf};
@@ -11,6 +13,11 @@ fn main() -> Result<()> {
     let command_args = &args[4..];
     let root = "./.sandbox";
     let new_command = isolate(root, &command);
+    if cfg!(target_os = "linux") {
+        unsafe {
+            libc::unshare(libc::CLONE_NEWPID);
+        }
+    }
     let output = Command::new(new_command)
         .args(command_args)
         .stdout(Stdio::inherit())
